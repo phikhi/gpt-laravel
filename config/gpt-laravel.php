@@ -20,6 +20,6 @@ return [
             'frequency_penalty' => 0,
             'presence_penalty' => 0,
             'suffix' => null,
-        ]
+        ],
     ],
 ];

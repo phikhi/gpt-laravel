@@ -2,14 +2,20 @@
 
 namespace Galee\Gpt;
 
+use Galee\Gpt\Traits\Configurable;
 use Illuminate\Support\Facades\Config;
-use OpenAI\Laravel\Facades\OpenAI;
+use OpenAI;
+use OpenAI\Client;
 
 class Gpt
 {
-    protected array $config = [];
+    use Configurable;
+
     protected array $response = [];
+
     protected string $type = 'completion';
+
+    protected Client $client;
 
     public function __construct(
         ?array $config = null,
@@ -17,8 +23,15 @@ class Gpt
     ) {
         $this->config($config ?? Config::get('gpt-laravel'));
         $this->type($type ?? $this->type);
+        $this->setClient();
+    }
 
-        return $this;
+    private function setClient(): void
+    {
+        $this->client = OpenAI::client(
+            $this->config['api_key'],
+            $this->config['organization']
+        );
     }
 
     public function type(string $type): Gpt
@@ -28,67 +41,11 @@ class Gpt
         return $this;
     }
 
-    public function config(array $config): Gpt
-    {
-        $this->config = $config;
-
-        return $this;
-    }
-
-    public function model(string $model): Gpt
-    {
-        data_set($this->config, $this->type.'.defaults.model', $model);
-
-        return $this;
-    }
-
-    public function temperature(float $temperature): Gpt
-    {
-        data_set($this->config, $this->type.'.defaults.temperature', $temperature);
-
-        return $this;
-    }
-
-    public function maxTokens(int $maxTokens): Gpt
-    {
-        data_set($this->config, $this->type.'.defaults.max_tokens', $maxTokens);
-
-        return $this;
-    }
-
-    public function topP(float $topP): Gpt
-    {
-        data_set($this->config, $this->type.'.defaults.top_p', $topP);
-
-        return $this;
-    }
-
-    public function frequencyPenalty(float $frequencyPenalty): Gpt
-    {
-        data_set($this->config, $this->type.'.defaults.frequency_penalty', $frequencyPenalty);
-
-        return $this;
-    }
-
-    public function presencePenalty(float $presencePenalty): Gpt
-    {
-        data_set($this->config, $this->type.'.defaults.presence_penalty', $presencePenalty);
-
-        return $this;
-    }
-
-    public function suffix(string $suffix): Gpt
-    {
-        data_set($this->config, $this->type.'.defaults.suffix', $suffix);
-
-        return $this;
-    }
-
     public function completion(string $prompt): Gpt
     {
-        $this->response = OpenAI::completions()->create(
+        $this->response = $this->client->completions()->create(
             $this->requestPayload($prompt)
-        );
+        )->toArray();
 
         return $this;
     }
@@ -110,7 +67,7 @@ class Gpt
 
     protected function requestPayload(mixed $attributes): array
     {
-        $attributes = (!is_array($attributes)) ? [$attributes] : $attributes;
+        $attributes = (! is_array($attributes)) ? [$attributes] : $attributes;
 
         return array_merge($attributes, $this->config[$this->type]['defaults']);
     }
