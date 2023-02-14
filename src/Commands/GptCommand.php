@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Galee\Gpt\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class GptCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'gpt-laravel';
 
     public $description = 'My command';
 
