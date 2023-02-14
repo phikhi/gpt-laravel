@@ -2,9 +2,9 @@
 
 namespace Galee\Gpt\Tests;
 
+use Galee\Gpt\GptServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Galee\Gpt\GptServiceProvider;
 
 class TestCase extends Orchestra
 {

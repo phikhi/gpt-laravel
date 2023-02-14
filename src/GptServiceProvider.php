@@ -2,9 +2,9 @@
 
 namespace Galee\Gpt;
 
+use Galee\Gpt\Commands\GptCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Galee\Gpt\Commands\GptCommand;
 
 class GptServiceProvider extends PackageServiceProvider
 {
@@ -21,6 +21,6 @@ class GptServiceProvider extends PackageServiceProvider
             // ->hasViews()
             // ->hasMigration('create_gpt-laravel_table')
             // ->hasCommand(GptCommand::class)
-            ;
+;
     }
 }

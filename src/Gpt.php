@@ -8,7 +8,9 @@ use OpenAI\Laravel\Facades\OpenAI;
 class Gpt
 {
     protected array $config = [];
+
     protected array $response = [];
+
     protected string $type = 'completion';
 
     public function __construct(
@@ -110,7 +112,7 @@ class Gpt
 
     protected function requestPayload(mixed $attributes): array
     {
-        $attributes = (!is_array($attributes)) ? [$attributes] : $attributes;
+        $attributes = (! is_array($attributes)) ? [$attributes] : $attributes;
 
         return array_merge($attributes, $this->config[$this->type]['defaults']);
     }
